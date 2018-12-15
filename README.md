@@ -1,8 +1,7 @@
 ## Change data to feather format
 
 ```
-python scripts/convert_tsv_to_feather.py
-python scripts/convert_zip_to_feather.py
+python scripts/convert_to_feather.py
 ```
 
 ## Create features
