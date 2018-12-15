@@ -15,6 +15,6 @@ def log_evaluation(logger, period=1, show_stdv=True, level=logging.DEBUG):
                 _format_eval_result(x, show_stdv)
                 for x in env.evaluation_result_list
             ])
-            logger.log(level, '[{}]\t{}'.format(env.iteration+1, result))
+            logger.log(level, '[{}]\t{}'.format(env.iteration + 1, result))
     _callback.order = 10
     return _callback
