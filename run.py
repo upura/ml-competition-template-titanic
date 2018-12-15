@@ -5,7 +5,7 @@ from sklearn.model_selection import KFold
 
 from utils import load_datasets, load_target
 from logs.logger import log_best
-from models.lgbm import train_and_predict_lgbm
+from models.lgbmClassifier import train_and_predict_lgbm
 
 
 now = datetime.datetime.now()
