@@ -15,34 +15,12 @@ logging.basicConfig(
 logging.debug('./logs/log_{0:%Y%m%d%H%M%S}.log'.format(now))
 
 feats = [
-    'date_cos',
-    'date_sin',
-    'day_cos',
-    'day_sin',
-    'dow_cos',
-    'dow_sin',
-    'edited_dow',
-    'dow',
-    'month_cos',
-    'month_sin',
-    'month',
-    'year',
-    'holiday',
-    'edited_holiday',
-    'park_dummies',
-    'agg_dow_park',
-    'agg_dow_month',
-    'agg_park_month',
-    'agg_dow_park_month',
-    'agg_dow',
-    'agg_park',
-    'agg_month',
-    'weather',
-    'lat_lon',
-    'hotlink',
-    'tommorow_holiday',
-    'yesterday_holiday',
-    'access_date'
+    'age',
+    'embarked',
+    'family_size',
+    'fare',
+    'pclass',
+    'sex'
 ]
 
 logging.debug(feats)
@@ -54,7 +32,7 @@ logging.debug(X_train_all.shape)
 y_preds = []
 models = []
 
-kf = KFold(n_splits=8, random_state=0)
+kf = KFold(n_splits=3, random_state=0)
 for train_index, valid_index in kf.split(X_train_all):
     X_train, X_valid = (
         X_train_all.iloc[train_index, :], X_train_all.iloc[valid_index, :]
@@ -74,7 +52,7 @@ for train_index, valid_index in kf.split(X_train_all):
     log_best(model)
 
 # CVスコア
-scores = [m.best_score['valid_0']['l1'] for m in models]
+scores = [m.best_score['valid_0']['multi_logloss'] for m in models]
 score = sum(scores) / len(scores)
 print('===CV scores===')
 print(scores)
@@ -84,14 +62,14 @@ logging.debug(scores)
 logging.debug(score)
 
 # submitファイルの作成
-test = pd.read_feather('./data/input/test.feather')
-sub = [pd.DataFrame(df, index=test.index) for df in y_preds]
+sub = pd.DataFrame(pd.read_csv('./data/input/test.csv')['PassengerId'])
 
-for i in range(len(sub) - 1):
-    sub[0].loc[:, 0] += sub[i + 1].loc[:, 0]
-sub[0].loc[:, 0] /= len(sub)
+for i in range(len(y_preds) - 1):
+    y_preds[0] += y_preds[i + 1]
 
-sub[0].to_csv(
-    './data/output/sub_{0:%Y%m%d%H%M%S}_{1}.tsv'.format(now, score),
-    sep='\t', header=None
+sub['Survived'] = [1 if y > int(len(y_pred)/2) else 0 for y in y_preds[0]]
+
+sub.to_csv(
+    './data/output/sub_{0:%Y%m%d%H%M%S}_{1}.csv'.format(now, score),
+    index=False
 )

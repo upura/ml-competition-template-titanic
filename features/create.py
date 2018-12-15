@@ -22,7 +22,7 @@ class Sex(Feature):
 class FamilySize(Feature):
     def create_features(self):
         self.train['FamilySize'] = train['Parch'] + train['SibSp'] + 1
-        self.test['FamilySize'] = test['Parch'] + train['SibSp'] + 1
+        self.test['FamilySize'] = test['Parch'] + test['SibSp'] + 1
 
 
 class Embarked(Feature):

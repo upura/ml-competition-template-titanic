@@ -20,6 +20,6 @@ def load_datasets(feats):
 
 
 def load_target():
-    train = pd.read_feather('./data/input/train.feather')
-    y_train = train['visitors']
+    train = pd.read_csv('./data/input/train.csv')
+    y_train = train['Survived']
     return y_train

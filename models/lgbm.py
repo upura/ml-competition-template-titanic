@@ -1,5 +1,6 @@
 import lightgbm as lgb
 import logging
+import numpy as np
 
 from logs.logger import log_evaluation
 
@@ -18,8 +19,8 @@ def train_and_predict_lgbm(X_train, X_valid, y_train, y_valid, X_test):
         'subsample': 0.8,
         'reg_alpha': 1,
         'reg_lambda': 1,
-        'objective': 'regression',
-        'metric': 'mae',
+        'objective': 'multiclass',
+        'num_class': 2
     }
 
     logging.debug(lgbm_params)
@@ -43,5 +44,7 @@ def train_and_predict_lgbm(X_train, X_valid, y_train, y_valid, X_test):
 
     # テストデータを予測する
     y_pred = model.predict(X_test, num_iteration=model.best_iteration)
+    y_pred_max = np.argmax(y_pred, axis=1)
+    print(len(X_test))
 
-    return y_pred, model
+    return y_pred_max, model

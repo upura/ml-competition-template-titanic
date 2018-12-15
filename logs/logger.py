@@ -4,7 +4,7 @@ from lightgbm.callback import _format_eval_result
 
 def log_best(model):
     logging.debug(model.best_iteration)
-    logging.debug(model.best_score['valid_0']['l1'])
+    logging.debug(model.best_score['valid_0']['multi_logloss'])
 
 
 def log_evaluation(logger, period=1, show_stdv=True, level=logging.DEBUG):
