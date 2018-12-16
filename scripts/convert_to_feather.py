@@ -10,5 +10,5 @@ extension = 'csv'
 # extension = 'zip'
 
 for t in target:
-    (pd.read_table('./data/input/' + t + '.' + extension, encoding="utf-8"))\
+    (pd.read_csv('./data/input/' + t + '.' + extension, encoding="utf-8"))\
         .to_feather('./data/input/' + t + '.feather')

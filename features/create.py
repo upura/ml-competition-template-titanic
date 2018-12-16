@@ -128,7 +128,7 @@ class Title(Feature):
 if __name__ == '__main__':
     args = get_arguments()
 
-    train = pd.read_csv('./data/input/train.csv')
-    test = pd.read_csv('./data/input/test.csv')
+    train = pd.read_feather('./data/input/train.feather')
+    test = pd.read_feather('./data/input/test.feather')
 
     generate_features(globals(), args.force)
