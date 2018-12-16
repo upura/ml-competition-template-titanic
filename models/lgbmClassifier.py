@@ -5,23 +5,11 @@ import numpy as np
 from logs.logger import log_evaluation
 
 
-def train_and_predict_lgbm(X_train, X_valid, y_train, y_valid, X_test):
+def train_and_predict(X_train, X_valid, y_train, y_valid, X_test, lgbm_params):
 
     # データセットを生成する
     lgb_train = lgb.Dataset(X_train, y_train)
     lgb_eval = lgb.Dataset(X_valid, y_valid, reference=lgb_train)
-
-    lgbm_params = {
-        'learning_rate': 0.1,
-        'num_leaves': 8,
-        'boosting_type': 'gbdt',
-        'colsample_bytree': 0.65,
-        'subsample': 0.8,
-        'reg_alpha': 1,
-        'reg_lambda': 1,
-        'objective': 'multiclass',
-        'num_class': 2
-    }
 
     logging.debug(lgbm_params)
 

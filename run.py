@@ -2,11 +2,18 @@ import pandas as pd
 import datetime
 import logging
 from sklearn.model_selection import KFold
+import argparse
+import json
 
 from utils import load_datasets, load_target
 from logs.logger import log_best
-from models.lgbmClassifier import train_and_predict_lgbm
+from models.lgbmClassifier import train_and_predict
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', default='./configs/default.json')
+options = parser.parse_args()
+config = json.load(open(options.config))
 
 now = datetime.datetime.now()
 logging.basicConfig(
@@ -14,15 +21,7 @@ logging.basicConfig(
 )
 logging.debug('./logs/log_{0:%Y%m%d%H%M%S}.log'.format(now))
 
-feats = [
-    'age',
-    'embarked',
-    'family_size',
-    'fare',
-    'pclass',
-    'sex'
-]
-
+feats = config['features']
 logging.debug(feats)
 
 X_train_all, X_test = load_datasets(feats)
@@ -32,6 +31,8 @@ logging.debug(X_train_all.shape)
 y_preds = []
 models = []
 
+lgbm_params = config['lgbm_params']
+
 kf = KFold(n_splits=3, random_state=0)
 for train_index, valid_index in kf.split(X_train_all):
     X_train, X_valid = (
@@ -40,8 +41,8 @@ for train_index, valid_index in kf.split(X_train_all):
     y_train, y_valid = y_train_all[train_index], y_train_all[valid_index]
 
     # lgbmの実行
-    y_pred, model = train_and_predict_lgbm(
-        X_train, X_valid, y_train, y_valid, X_test
+    y_pred, model = train_and_predict(
+        X_train, X_valid, y_train, y_valid, X_test, lgbm_params
     )
 
     # 結果の保存
@@ -67,7 +68,7 @@ sub = pd.DataFrame(pd.read_csv('./data/input/test.csv')['PassengerId'])
 for i in range(len(y_preds) - 1):
     y_preds[0] += y_preds[i + 1]
 
-sub['Survived'] = [1 if y > int(len(y_pred)/2) else 0 for y in y_preds[0]]
+sub['Survived'] = [1 if y > int(len(y_pred) / 2) else 0 for y in y_preds[0]]
 
 sub.to_csv(
     './data/output/sub_{0:%Y%m%d%H%M%S}_{1}.csv'.format(now, score),
