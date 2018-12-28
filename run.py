@@ -24,8 +24,10 @@ logging.debug('./logs/log_{0:%Y%m%d%H%M%S}.log'.format(now))
 feats = config['features']
 logging.debug(feats)
 
+target_name = config['target_name']
+
 X_train_all, X_test = load_datasets(feats)
-y_train_all = load_target()
+y_train_all = load_target(target_name)
 logging.debug(X_train_all.shape)
 
 y_preds = []
@@ -50,10 +52,12 @@ for train_index, valid_index in kf.split(X_train_all):
     models.append(model)
 
     # スコア
-    log_best(model)
+    log_best(model, config['loss'])
 
 # CVスコア
-scores = [m.best_score['valid_0']['multi_logloss'] for m in models]
+scores = [
+    m.best_score['valid_0'][config['loss']] for m in models
+]
 score = sum(scores) / len(scores)
 print('===CV scores===')
 print(scores)
@@ -63,12 +67,13 @@ logging.debug(scores)
 logging.debug(score)
 
 # submitファイルの作成
-sub = pd.DataFrame(pd.read_csv('./data/input/test.csv')['PassengerId'])
+ID_name = config['ID_name']
+sub = pd.DataFrame(pd.read_csv('./data/input/test.csv')[ID_name])
 
 for i in range(len(y_preds) - 1):
     y_preds[0] += y_preds[i + 1]
 
-sub['Survived'] = [1 if y > int(len(y_pred) / 2) else 0 for y in y_preds[0]]
+sub[target_name] = [1 if y > 1 else 0 for y in y_preds[0]]
 
 sub.to_csv(
     './data/output/sub_{0:%Y%m%d%H%M%S}_{1}.csv'.format(now, score),

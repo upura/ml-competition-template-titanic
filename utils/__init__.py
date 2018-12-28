@@ -19,7 +19,7 @@ def load_datasets(feats):
     return X_train, X_test
 
 
-def load_target():
+def load_target(target_name):
     train = pd.read_csv('./data/input/train.csv')
-    y_train = train['Survived']
+    y_train = train[target_name]
     return y_train

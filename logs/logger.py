@@ -2,9 +2,9 @@ import logging
 from lightgbm.callback import _format_eval_result
 
 
-def log_best(model):
+def log_best(model, metric):
     logging.debug(model.best_iteration)
-    logging.debug(model.best_score['valid_0']['multi_logloss'])
+    logging.debug(model.best_score['valid_0'][metric])
 
 
 def log_evaluation(logger, period=1, show_stdv=True, level=logging.DEBUG):
