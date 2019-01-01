@@ -102,7 +102,7 @@ class Title(Feature):
                 'Dona'
             ], 'Rare') \
             .replace(['Mlle', 'Ms', 'Mme'], ['Miss', 'Miss', 'Mrs'])
-        test['Title'] = test['Name'].map(title_mapping).fillna(0)
+        train['Title'] = train['Name'].map(title_mapping).fillna(0)
         test['Title'] = test['Name'] \
             .apply(get_title) \
             .replace([
