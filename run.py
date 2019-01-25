@@ -7,7 +7,7 @@ import json
 
 from utils import load_datasets, load_target
 from logs.logger import log_best
-from models.lgbmClassifier import train_and_predict
+from models.lgbm import train_and_predict
 
 
 parser = argparse.ArgumentParser()
@@ -70,10 +70,8 @@ logging.debug(score)
 ID_name = config['ID_name']
 sub = pd.DataFrame(pd.read_csv('./data/input/test.csv')[ID_name])
 
-for i in range(len(y_preds) - 1):
-    y_preds[0] += y_preds[i + 1]
-
-sub[target_name] = [1 if y > 1 else 0 for y in y_preds[0]]
+y_sub = sum(y_preds)
+sub[target_name] = y_sub
 
 sub.to_csv(
     './data/output/sub_{0:%Y%m%d%H%M%S}_{1}.csv'.format(now, score),
