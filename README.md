@@ -22,7 +22,7 @@ ml-competition-template-titanic
 ├── logs
 │   └── logger.py
 ├── models
-│   └── lgbmClassifier.py
+│   └── lgbm.py
 ├── notebooks
 │   └── eda.ipynb
 ├── scripts
