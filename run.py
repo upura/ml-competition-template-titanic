@@ -7,7 +7,7 @@ import json
 
 from utils import load_datasets, load_target
 from logs.logger import log_best
-from models.lgbmClassifier import train_and_predict
+from models.lgbm import train_and_predict
 
 
 parser = argparse.ArgumentParser()
