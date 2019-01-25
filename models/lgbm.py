@@ -1,6 +1,5 @@
 import lightgbm as lgb
 import logging
-import numpy as np
 
 from logs.logger import log_evaluation
 
@@ -32,7 +31,5 @@ def train_and_predict(X_train, X_valid, y_train, y_valid, X_test, lgbm_params):
 
     # テストデータを予測する
     y_pred = model.predict(X_test, num_iteration=model.best_iteration)
-    y_pred_max = np.argmax(y_pred, axis=1)
-    print(len(X_test))
 
-    return y_pred_max, model
+    return y_pred, model
