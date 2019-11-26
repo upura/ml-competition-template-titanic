@@ -3,10 +3,17 @@ import inspect
 import re
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-
 import pandas as pd
+import time
+from contextlib import contextmanager
 
-from utils.__init__ import timer
+
+@contextmanager
+def timer(name):
+    t0 = time.time()
+    print(f'[{name}] start')
+    yield
+    print(f'[{name}] done in {time.time() - t0:.0f} s')
 
 
 def get_arguments():
